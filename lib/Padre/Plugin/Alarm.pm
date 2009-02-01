@@ -3,7 +3,7 @@ package Padre::Plugin::Alarm;
 use warnings;
 use strict;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 use base 'Padre::Plugin';
 use Wx         ':everything';
@@ -13,27 +13,28 @@ use Padre::Wx::Dialog ();
 use vars qw/$alarm_timer_id/;
 
 sub padre_interfaces {
-	'Padre::Plugin' => '0.18',
+	'Padre::Plugin' => '0.26',
 }
 
 sub menu_plugins_simple {
+    my $self        = shift;
 	
 	# check if we need set timer on
-	my $plugin_manager = Padre->ide->plugin_manager;
-	my $config = $plugin_manager->plugin_config('Alarm');
+	my $config = $self->config_read;
 	if ( $config and exists $config->{alarms} and scalar @{$config->{alarms}} ) {
 		_set_alarm();
 	}
 	
 	return ('Alarm Clock' => [
-		'Set Alarm Time', \&set_alarm_time,
-		'Stop Alarm',     \&stop_alarm,
-		'Clear Alarm',    \&clear_alarm,
+		'Set Alarm Time', sub { $self->set_alarm_time },
+		'Stop Alarm',     sub { $self->stop_alarm },
+		'Clear Alarm',    sub { $self->clear_alarm },
 	]);
 }
 
 sub set_alarm_time {
-	my ( $main ) = shift;
+	my ( $self ) = shift;
+	my $main   = $self->main;
 	
 	my @frequency = ( 'once', 'daily' );
 	my @layout = (
@@ -81,74 +82,81 @@ sub ok_clicked {
 	my $data = $dialog->get_data;
 	$dialog->Destroy;
 	
-	my $main_window = Padre->ide->wx->main_window;
+	my $main = Padre->ide->wx->main;
 
 	my $alarm_time = $data->{_alarm_time_};
 	if ( $alarm_time !~ /^\d{1,2}\:\d{2}$/ ) {
-		Wx::MessageBox(gettext('Possible Value Format: \d:\d\d or \d\d:\d\d like 6:13 or 23:55'), gettext("Wrong Alarm Time"), Wx::wxOK, $main_window);
+		Wx::MessageBox(gettext('Possible Value Format: \d:\d\d or \d\d:\d\d like 6:13 or 23:55'), gettext("Wrong Alarm Time"), Wx::wxOK, $main);
 		return;
 	}
 	
 	my $frequency = $data->{_frequency_};
 
-	my $plugin_manager = Padre->ide->plugin_manager;
-	my $config = $plugin_manager->plugin_config('Alarm');
-	$config->{alarms} ||= [];
-
+    # stupid hack to get $self for config_read
+	my $self = bless {}, __PACKAGE__;
+	my $config = $self->config_read;
 	push @{$config->{alarms}}, {
 		time => $alarm_time,
 		frequency => $frequency,
 		status => 'enabled',
 	};
+	$self->config_write($config);
+
 	_set_alarm();
 }
 
 sub _set_alarm {
-	my $main = Padre->ide->wx->main_window;
+	my $main = Padre->ide->wx->main;
 
 	$alarm_timer_id = Wx::NewId unless $alarm_timer_id;
 
 	my $timer = Wx::Timer->new( $main, $alarm_timer_id );
 	unless ( $timer->IsRunning ) {
-		Wx::Event::EVT_TIMER($main, Padre::Wx::id_FILECHK_TIMER, \&on_timer_alarm);
+		Wx::Event::EVT_TIMER($main, $alarm_timer_id, \&on_timer_alarm);
 		$timer->Start(60 * 1000, 0); # every minute
 	}
 }
 
 sub stop_alarm {
-	my $main = shift;
+	my ( $self, $opts ) = @_;
+	my $main   = $self->main;
+	
+	if ( not $opts->{no_message} ) {
+	    $main->message('All Alarms are stopped', 'Stop Alarm');
+	}
+		
 	return unless $alarm_timer_id;
 	my $timer = Wx::Timer->new( $main, $alarm_timer_id );
 	if ( $timer->IsRunning ) {
 		$timer->Stop();
 	}
-	
-	$main->message('All Alarms are stopped', 'Stop Alarm');
 }
 
 sub clear_alarm {
-	my $main = shift;
+	my ( $self ) = shift;
+	my $main   = $self->main;
 	
-	my $plugin_manager = Padre->ide->plugin_manager;
-	my $config = $plugin_manager->plugin_config('Alarm');
+	my $config = $self->config_read;
 	$config->{alarms} = [];
+	$self->config_write($config);
 	
-	stop_alarm($main);
+	$self->stop_alarm( { no_message => 1 } );
 	$main->message('All Alarms are cleared', 'Clear Alarm');
 }
 
 sub on_timer_alarm {
 	
-	my $main_window = Padre->ide->wx->main_window;
-	my $plugin_manager = Padre->ide->plugin_manager;
-	my $config = $plugin_manager->plugin_config('Alarm');
+	# stupid hack to get $self for config_read
+	my $self = bless {}, __PACKAGE__;
 	
+	my $config = $self->config_read;
+
 	return unless ( $config and exists $config->{alarms} );
 	
 	# get now-time;
 	my @ntime = localtime();
 	my $ntime = sprintf('%d:%02d', $ntime[2], $ntime[1]);
-	
+
 	my $did_something = 0;
 	foreach ( @{$config->{alarms}} ) {
 		return unless ( $_->{status} eq 'enabled' );
@@ -158,8 +166,8 @@ sub on_timer_alarm {
 
 		if ( $time eq $ntime ) {
 			$did_something = 1;
-			my $frequency = $_->{frequency};
 			play_music();
+			my $frequency = $_->{frequency};
 			if ( $frequency eq 'once' ) {
 				$_->{status} = 'disabled';
 			}
@@ -168,6 +176,7 @@ sub on_timer_alarm {
 	
 	if ( $did_something ) {
 		$config->{alarms} = [ grep { $_->{status} eq 'enabled' } @{$config->{alarms}} ];
+		$self->config_write($config);
 	}
 }
 
