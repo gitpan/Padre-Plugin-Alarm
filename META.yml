@@ -1,14 +1,12 @@
 ---
 name: Padre-Plugin-Alarm
-version: 0.03
+version: 0.04
 author:
   - 'Fayland Lam <fayland@gmail.com>'
 abstract: Alarm Clock in Padre
 license: perl
 resources:
   license: http://dev.perl.org/licenses/
-configure_requires:
-  Padre::PluginBuilder: 0.12
 requires:
   Audio::Beep: 0
   Padre: 0.26
@@ -18,7 +16,7 @@ build_requires:
 provides:
   Padre::Plugin::Alarm:
     file: lib/Padre/Plugin/Alarm.pm
-    version: 0.03
+    version: 0.04
 generated_by: Module::Build version 0.31
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.2.html
