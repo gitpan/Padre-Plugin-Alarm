@@ -1,53 +1,47 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: padre-plugin-perlcritic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-05-18 23:29+0800\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"POT-Creation-Date: 2009-05-25 02:34+0800\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Bruno Vecchi <vecchi.v@gmail>\n"
+"Language-Team: Bruno Vecchi <vecchi.b@gmail.com>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: lib/Padre/Plugin/Alarm.pm:44
 msgid "Time (eg: 23:55):"
-msgstr ""
+msgstr "Tiempo (ej: 23:55):"
 
 #: lib/Padre/Plugin/Alarm.pm:48
 msgid "Frequency:"
-msgstr ""
+msgstr "Frecuencia:"
 
 #: lib/Padre/Plugin/Alarm.pm:58
 msgid "Set Alarm Time"
-msgstr ""
+msgstr "Establecer Tiempo de Alarma:"
 
 #: lib/Padre/Plugin/Alarm.pm:91
 msgid "Possible Value Format: \\d:\\d\\d or \\d\\d:\\d\\d like 6:13 or 23:55"
-msgstr ""
+msgstr "Posible Formato de Valor: \\d:\\d\\d or \\d\\d:\\d\\d como 6:13 o 23:55"
 
 #: lib/Padre/Plugin/Alarm.pm:91
 msgid "Wrong Alarm Time"
-msgstr ""
+msgstr "Tiempo de Alarma Incorrecto"
 
 #: lib/Padre/Plugin/Alarm.pm:127
 msgid "All Alarms are stopped"
-msgstr ""
+msgstr "Todas las Alarmas detenidas"
 
 #: lib/Padre/Plugin/Alarm.pm:127
 msgid "Stop Alarm"
-msgstr ""
+msgstr "Detener Alarma"
 
 #: lib/Padre/Plugin/Alarm.pm:146
 msgid "All Alarms are cleared"
-msgstr ""
+msgstr "Todas las Alarmas canceladas"
 
 #: lib/Padre/Plugin/Alarm.pm:146
 msgid "Clear Alarm"
-msgstr ""
+msgstr "Cancelar Alarma"
