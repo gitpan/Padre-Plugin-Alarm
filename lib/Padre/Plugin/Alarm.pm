@@ -1,17 +1,20 @@
 package Padre::Plugin::Alarm;
+BEGIN {
+  $Padre::Plugin::Alarm::VERSION = '0.09';
+}
+
+# ABSTRACT: Alarm Clock in Padre
 
 use warnings;
 use strict;
 
-our $VERSION = '0.08';
-
 use base 'Padre::Plugin';
 
-use Padre::Wx ();
-use Wx::Locale qw(:default);
+use Padre::Wx         ();
 use Padre::Wx::Dialog ();
+use Padre::Util       ();
 
-use vars qw/$alarm_timer_id/;
+our $alarm_timer_id;
 
 sub padre_interfaces {
 	'Padre::Plugin' => '0.47',;
@@ -86,8 +89,11 @@ sub ok_clicked {
 
 	my $alarm_time = $data->{_alarm_time_};
 	if ( $alarm_time !~ /^\d{1,2}\:\d{2}$/ ) {
-		Wx::MessageBox( Wx::gettext('Possible Value Format: \d:\d\d or \d\d:\d\d like 6:13 or 23:55'), Wx::gettext("Wrong Alarm Time"),
-			Wx::wxOK, $main );
+		Wx::MessageBox(
+			Wx::gettext('Possible Value Format: \d:\d\d or \d\d:\d\d like 6:13 or 23:55'),
+			Wx::gettext("Wrong Alarm Time"),
+			Wx::wxOK, $main
+		);
 		return;
 	}
 
@@ -115,7 +121,7 @@ sub _set_alarm {
 	my $timer = Wx::Timer->new( $main, $alarm_timer_id );
 	unless ( $timer->IsRunning ) {
 		Wx::Event::EVT_TIMER( $main, $alarm_timer_id, \&on_timer_alarm );
-		$timer->Start( 60 * 1000, 0 ); # every minute
+		$timer->Start( 1000, 0 ); # every second
 	}
 }
 
@@ -169,7 +175,7 @@ sub on_timer_alarm {
 
 		if ( $time eq $ntime ) {
 			$did_something = 1;
-			play_music();
+			play_alarm();
 			my $frequency = $_->{frequency};
 			if ( $frequency eq 'once' ) {
 				$_->{status} = 'disabled';
@@ -183,21 +189,26 @@ sub on_timer_alarm {
 	}
 }
 
-sub play_music {
-	require Audio::Beep;
-	my $beeper = Audio::Beep->new();
-	my $music  = "g' f bes' c8 f d4 c8 f d4 bes c g f2";
-
-	# Pictures at an Exhibition by Modest Mussorgsky
-	$beeper->play($music);
+sub play_alarm {
+	my $audio_dir = File::Spec->catdir( Padre::Util::share('Alarm'), 'audio' );
+	my $file = File::Spec->catfile( $audio_dir, 'alarm.wav' );
+	$file = '' unless -f $file;
+	my $sound = Wx::Sound->new($file);
+	$sound->Play(Wx::wxSOUND_ASYNC);
 }
 
 1;
-__END__
+
+
+=pod
 
 =head1 NAME
 
 Padre::Plugin::Alarm - Alarm Clock in Padre
+
+=head1 VERSION
+
+version 0.09
 
 =head1 SYNOPSIS
 
@@ -206,17 +217,37 @@ Padre::Plugin::Alarm - Alarm Clock in Padre
 
 =head1 DESCRIPTION
 
-Alarm Clock (L<Audio::Beep>)
+A simple Alarm Clock plugin
 
-=head1 AUTHOR
+=head1 THANKS
 
-Fayland Lam, C<< <fayland at gmail.com> >>
+The alarm sound sample was taken from L<http://www.freesound.org/>.
+It was made by ryansnook - L<http://www.freesound.org/usersViewSingle.php?id=430094> and
+is being licensed under L<http://creativecommons.org/licenses/sampling+/1.0/>.
 
-=head1 COPYRIGHT & LICENSE
+=head1 AUTHORS
 
-Copyright 2008 Fayland Lam, all rights reserved.
+=over 4
 
-This program is free software; you can redistribute it and/or modify it
-under the same terms as Perl itself.
+=item *
+
+Fayland Lam <fayland@gmail.com>
+
+=item *
+
+Ahmad M. Zawawi <ahmad.zawawi@gmail.com>
+
+=back
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2010 by Fayland Lam.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
 
 =cut
+
+
+__END__
+
