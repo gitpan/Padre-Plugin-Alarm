@@ -7,7 +7,6 @@ build_requires:
   Locale::Msgfmt: 0.14
   Module::Build: 0.3601
   Test::More: 0
-  Test::NeedsDisplay: 0
 configure_requires:
   Module::Build: 0.3601
 dynamic_config: 0
@@ -22,7 +21,7 @@ requires:
 resources:
   homepage: http://padre.perlide.org
   repository: http://svn.perlide.org/padre/trunk/Padre-Plugin-Alarm/
-version: 0.11
+version: 0.12
 x_Dist_Zilla:
   plugins:
     -
@@ -92,7 +91,7 @@ x_Dist_Zilla:
     -
       class: Dist::Zilla::Plugin::LoadTests
       name: '@PadrePlugin/LoadTests'
-      version: 0.04
+      version: 0.05
     -
       class: Dist::Zilla::Plugin::EOLTests
       name: '@PadrePlugin/EOLTests'
@@ -133,14 +132,6 @@ x_Dist_Zilla:
       class: Dist::Zilla::Plugin::LocaleMsgfmt
       name: '@PadrePlugin/LocaleMsgfmt'
       version: 1.100970
-    -
-      class: Dist::Zilla::Plugin::Prereqs
-      config:
-        Dist::Zilla::Plugin::Prereqs:
-          phase: test
-          type: requires
-      name: '@PadrePlugin/TestNeedsDisplayDeps'
-      version: 4.102342
     -
       class: Dist::Zilla::Plugin::Prereqs
       config:
