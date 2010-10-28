@@ -9,7 +9,8 @@ my %module_build_args = (
   'build_requires' => {
     'Locale::Msgfmt' => '0.14',
     'Module::Build' => '0.3601',
-    'Test::More' => '0'
+    'Test::More' => '0',
+    'Test::NeedsDisplay' => '0'
   },
   'configure_requires' => {
     'Module::Build' => '0.3601'
@@ -20,7 +21,7 @@ my %module_build_args = (
     'Ahmad M. Zawawi <ahmad.zawawi@gmail.com>'
   ],
   'dist_name' => 'Padre-Plugin-Alarm',
-  'dist_version' => '0.10',
+  'dist_version' => '0.11',
   'license' => 'perl',
   'module_name' => 'Padre::Plugin::Alarm',
   'recommends' => {},

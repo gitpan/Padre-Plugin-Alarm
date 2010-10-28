@@ -4,6 +4,14 @@ use strict;
 use warnings;
 
 use Test::More;
+
+BEGIN {
+    if ( 1 and not $ENV{DISPLAY} and not $^O eq 'MSWin32' ) {
+        plan skip_all => 'Needs DISPLAY';
+        exit 0;
+    }
+}
+
 use File::Find;
 use File::Temp qw{ tempdir };
 

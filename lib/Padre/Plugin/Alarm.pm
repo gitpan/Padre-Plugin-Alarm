@@ -1,6 +1,6 @@
 package Padre::Plugin::Alarm;
 BEGIN {
-  $Padre::Plugin::Alarm::VERSION = '0.10';
+  $Padre::Plugin::Alarm::VERSION = '0.11';
 }
 
 # ABSTRACT: Alarm Clock in Padre
@@ -208,7 +208,7 @@ Padre::Plugin::Alarm - Alarm Clock in Padre
 
 =head1 VERSION
 
-version 0.10
+version 0.11
 
 =head1 SYNOPSIS
 
