@@ -44,7 +44,7 @@
          "url" : "http://svn.perlide.org/padre/trunk/Padre-Plugin-Alarm/"
       }
    },
-   "version" : "0.12",
+   "version" : "0.13",
    "x_Dist_Zilla" : {
       "plugins" : [
          {
@@ -125,7 +125,7 @@
          {
             "class" : "Dist::Zilla::Plugin::CompileTests",
             "name" : "@PadrePlugin/CompileTests",
-            "version" : "1.103000"
+            "version" : "1.103010"
          },
          {
             "class" : "Dist::Zilla::Plugin::LoadTests",

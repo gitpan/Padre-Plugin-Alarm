@@ -1,6 +1,7 @@
 Revision history for Padre-Plugin-Alarm
 
-0.12   2010.10.28
+0.13   2010.10.28
+	- Removed Test::NeedsDisplay dependency (AZAWAWI)
 
 0.11   2010.10.28
 	- Fixed Test::NeedsDisplay dependency in [LoadTests] and [CompileTests] uses now
